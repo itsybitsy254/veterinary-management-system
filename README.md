@@ -24,7 +24,7 @@ Setup Instructions
 
 `***git clone https://github.com/itsybitsy254/veterinary-management-system.git***`
 
-`**cd veterinary-cli**`
+`**cd veterinary-management-system/**`
 
 2. Install the Required Packages
 The following dependencies are required:
@@ -41,13 +41,15 @@ General Command Structure
 Copy code
 `python -m veterinary.cli [COMMAND]`
 
+***```python
 Commands
+```***
 1. Add a Client
 Add a new client with their name, email, and phone number.
 Copy code
-***```python
-python -m veterinary.cli add-client
-```***
+
+***python -m veterinary.cli add-client***
+
 
 
 2. Add a Veterinarian
