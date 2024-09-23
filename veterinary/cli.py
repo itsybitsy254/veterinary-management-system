@@ -72,8 +72,8 @@ def menu():
             click.echo("Exiting the menu.")
             break
 
-        if choice in commands_map:
-            command_name = commands_map[choice]
+        command_name = commands_map.get(choice)
+        if command_name:
             click.echo(f"Running: {commands[choice - 1]}")
             cmd = cli.get_command(None, command_name)
             if cmd:
@@ -86,38 +86,43 @@ def menu():
 @cli.command('add-client')
 def add_client():
     """Add a new client."""
-    name = click.prompt("Enter client's name")
-    email = click.prompt("Enter client's email")
-    phone = click.prompt("Enter client's phone number")
-    client = Client(name=name, email=email, phone=phone)
+    client_data = {
+        'name': click.prompt("Enter client's name"),
+        'email': click.prompt("Enter client's email"),
+        'phone': click.prompt("Enter client's phone number")
+    }
+    client = Client(**client_data)
     session.add(client)
     session.commit()
-    click.echo(f"Client '{name}' added.")
+    click.echo(f"Client '{client_data['name']}' added.")
 
 @cli.command('add-specialization')
 def add_specialization():
     """Add a new specialization."""
-    name = click.prompt("Enter specialization name")
-    specialization = Specialization(name=name)
+    specialization_data = {
+        'name': click.prompt("Enter specialization name")
+    }
+    specialization = Specialization(**specialization_data)
     session.add(specialization)
     session.commit()
-    click.echo(f"Specialization '{name}' added.")
+    click.echo(f"Specialization '{specialization_data['name']}' added.")
 
 @cli.command('add-veterinarian')
 def add_veterinarian():
     """Add a new veterinarian and optionally add specializations."""
-    name = click.prompt("Enter veterinarian's name")
+    veterinarian_data = {
+        'name': click.prompt("Enter veterinarian's name")
+    }
+    veterinarian = Veterinarian(**veterinarian_data)
+    session.add(veterinarian)
+
     specializations = session.query(Specialization).all()
-    
     if specializations:
         click.echo("Available Specializations:")
         for spec in specializations:
             click.echo(f"ID: {spec.id}, Name: {spec.name}")
 
     specializations_input = click.prompt("Enter specialization IDs (comma-separated)", default='')
-    veterinarian = Veterinarian(name=name)
-    session.add(veterinarian)
-
     if specializations_input:
         spec_ids = [int(id.strip()) for id in specializations_input.split(',')]
         for spec_id in spec_ids:
@@ -127,15 +132,17 @@ def add_veterinarian():
             else:
                 click.echo(f"Specialization ID '{spec_id}' not found.")
     session.commit()
-    click.echo(f"Veterinarian '{name}' added.")
+    click.echo(f"Veterinarian '{veterinarian_data['name']}' added.")
 
 @cli.command('add-animal')
 def add_animal():
     """Add a new animal."""
-    name = click.prompt("Enter animal's name")
-    species = click.prompt("Enter animal's species")
-    breed = click.prompt("Enter animal's breed", default="")
-    age = click.prompt("Enter animal's age", type=int)
+    animal_data = {
+        'name': click.prompt("Enter animal's name"),
+        'species': click.prompt("Enter animal's species"),
+        'breed': click.prompt("Enter animal's breed", default=""),
+        'age': click.prompt("Enter animal's age", type=int)
+    }
 
     owners = session.query(Client).all()
     if owners:
@@ -147,10 +154,10 @@ def add_animal():
         click.echo("No clients available.")
         return
 
-    animal = Animal(name=name, species=species, breed=breed, age=age, owner_id=owner_id)
+    animal = Animal(owner_id=owner_id, **animal_data)
     session.add(animal)
     session.commit()
-    click.echo(f"Animal '{name}' added.")
+    click.echo(f"Animal '{animal_data['name']}' added.")
 
 @cli.command('add-appointment')
 def add_appointment():
@@ -182,21 +189,26 @@ def add_appointment():
     for vet in vets:
         click.echo(f"ID: {vet.id}, Name: {vet.name}")
 
-    client_id = click.prompt("Enter the client's ID", type=int)
-    animal_id = click.prompt("Enter the animal's ID", type=int)
-    veterinarian_id = click.prompt("Enter the veterinarian's ID", type=int)
+    appointment_data = {
+        'date': date,
+        'reason': reason,
+        'client_id': click.prompt("Enter the client's ID", type=int),
+        'animal_id': click.prompt("Enter the animal's ID", type=int),
+        'veterinarian_id': click.prompt("Enter the veterinarian's ID", type=int)
+    }
 
-    appointment = Appointment(date=date, reason=reason, client_id=client_id, animal_id=animal_id, veterinarian_id=veterinarian_id)
+    appointment = Appointment(**appointment_data)
     session.add(appointment)
     session.commit()
     click.echo("Appointment added.")
 
-
 @cli.command('add-prescription')
 def add_prescription():
     """Add a new prescription."""
-    medication = click.prompt("Enter medication name")
-    dosage = click.prompt("Enter dosage")
+    prescription_data = {
+        'medication': click.prompt("Enter medication name"),
+        'dosage': click.prompt("Enter dosage")
+    }
 
     animals = session.query(Animal).all()
     if animals:
@@ -208,7 +220,7 @@ def add_prescription():
         click.echo("No animals available.")
         return
 
-    prescription = Prescription(medication=medication, dosage=dosage, animal_id=animal_id)
+    prescription = Prescription(animal_id=animal_id, **prescription_data)
     session.add(prescription)
     session.commit()
     click.echo("Prescription added.")
@@ -255,7 +267,7 @@ def list_appointments():
         vet_name = appointment.veterinarian.name
         animal_name = appointment.animal.name
         client_name = appointment.client.name
-        click.echo(f"Appointment ID: {appointment.id}, Veterinarian: {vet_name}, Animal: {animal_name}, Client: {client_name}, Date: {appointment.date}, Reason: {appointment.reason}")
+        click.echo(f"Appointment ID: {appointment.id}, Date: {appointment.date}, Reason: {appointment.reason}, Client: {client_name}, Animal: {animal_name}, Veterinarian: {vet_name}")
 
 @cli.command('list-prescriptions')
 def list_prescriptions():
@@ -264,79 +276,80 @@ def list_prescriptions():
     click.echo("\nPrescriptions:")
     for prescription in prescriptions:
         animal_name = prescription.animal.name
-        click.echo(f"Prescription ID: {prescription.id}, Medication: {prescription.medication}, Dosage: {prescription.dosage}, Animal: {animal_name}")
+        click.echo(f"ID: {prescription.id}, Animal: {animal_name}, Medication: {prescription.medication}, Dosage: {prescription.dosage}")
 
+# Delete commands
 @cli.command('delete-client')
 def delete_client():
-    """Delete a client."""
-    client_id = click.prompt("Enter the ID of the client to delete", type=int)
+    """Delete a client by ID."""
+    client_id = click.prompt("Enter the client ID to delete", type=int)
     client = session.query(Client).get(client_id)
     if client:
         session.delete(client)
         session.commit()
-        click.echo(f"Client ID '{client_id}' deleted.")
+        click.echo(f"Client '{client.name}' deleted.")
     else:
-        click.echo(f"Client ID '{client_id}' not found.")
+        click.echo("Client not found.")
 
 @cli.command('delete-veterinarian')
 def delete_veterinarian():
-    """Delete a veterinarian."""
-    veterinarian_id = click.prompt("Enter the ID of the veterinarian to delete", type=int)
-    veterinarian = session.query(Veterinarian).get(veterinarian_id)
+    """Delete a veterinarian by ID."""
+    vet_id = click.prompt("Enter the veterinarian ID to delete", type=int)
+    veterinarian = session.query(Veterinarian).get(vet_id)
     if veterinarian:
         session.delete(veterinarian)
         session.commit()
-        click.echo(f"Veterinarian ID '{veterinarian_id}' deleted.")
+        click.echo(f"Veterinarian '{veterinarian.name}' deleted.")
     else:
-        click.echo(f"Veterinarian ID '{veterinarian_id}' not found.")
+        click.echo("Veterinarian not found.")
 
 @cli.command('delete-specialization')
 def delete_specialization():
-    """Delete a specialization."""
-    specialization_id = click.prompt("Enter the ID of the specialization to delete", type=int)
-    specialization = session.query(Specialization).get(specialization_id)
+    """Delete a specialization by ID."""
+    spec_id = click.prompt("Enter the specialization ID to delete", type=int)
+    specialization = session.query(Specialization).get(spec_id)
     if specialization:
         session.delete(specialization)
         session.commit()
-        click.echo(f"Specialization ID '{specialization_id}' deleted.")
+        click.echo(f"Specialization '{specialization.name}' deleted.")
     else:
-        click.echo(f"Specialization ID '{specialization_id}' not found.")
+        click.echo("Specialization not found.")
 
 @cli.command('delete-animal')
 def delete_animal():
-    """Delete an animal."""
-    animal_id = click.prompt("Enter the ID of the animal to delete", type=int)
+    """Delete an animal by ID."""
+    animal_id = click.prompt("Enter the animal ID to delete", type=int)
     animal = session.query(Animal).get(animal_id)
     if animal:
         session.delete(animal)
         session.commit()
-        click.echo(f"Animal ID '{animal_id}' deleted.")
+        click.echo(f"Animal '{animal.name}' deleted.")
     else:
-        click.echo(f"Animal ID '{animal_id}' not found.")
+        click.echo("Animal not found.")
 
 @cli.command('delete-appointment')
 def delete_appointment():
-    """Delete an appointment."""
-    appointment_id = click.prompt("Enter the ID of the appointment to delete", type=int)
+    """Delete an appointment by ID."""
+    appointment_id = click.prompt("Enter the appointment ID to delete", type=int)
     appointment = session.query(Appointment).get(appointment_id)
     if appointment:
         session.delete(appointment)
         session.commit()
-        click.echo(f"Appointment ID '{appointment_id}' deleted.")
+        click.echo(f"Appointment ID '{appointment.id}' deleted.")
     else:
-        click.echo(f"Appointment ID '{appointment_id}' not found.")
+        click.echo("Appointment not found.")
 
 @cli.command('delete-prescription')
 def delete_prescription():
-    """Delete a prescription."""
-    prescription_id = click.prompt("Enter the ID of the prescription to delete", type=int)
+    """Delete a prescription by ID."""
+    prescription_id = click.prompt("Enter the prescription ID to delete", type=int)
     prescription = session.query(Prescription).get(prescription_id)
     if prescription:
         session.delete(prescription)
         session.commit()
-        click.echo(f"Prescription ID '{prescription_id}' deleted.")
+        click.echo(f"Prescription ID '{prescription.id}' deleted.")
     else:
-        click.echo(f"Prescription ID '{prescription_id}' not found.")
+        click.echo("Prescription not found.")
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     cli()
