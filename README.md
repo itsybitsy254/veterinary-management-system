@@ -45,7 +45,9 @@ Commands
 1. Add a Client
 Add a new client with their name, email, and phone number.
 Copy code
-***python -m veterinary.cli add-client***
+***```python
+python -m veterinary.cli add-client
+```***
 
 
 2. Add a Veterinarian
