@@ -22,9 +22,9 @@ SQLite database
 Setup Instructions
 1. Clone the Repository
 
-`***git clone <repository-url>***
+`***git clone https://github.com/itsybitsy254/veterinary-management-system.git***`
 
-**cd veterinary-cli**`
+`**cd veterinary-cli**`
 
 2. Install the Required Packages
 The following dependencies are required:
