@@ -22,9 +22,9 @@ SQLite database
 Setup Instructions
 1. Clone the Repository
 
-***git clone <repository-url>***
+`***git clone <repository-url>***
 
-**cd veterinary-cli**
+**cd veterinary-cli**`
 
 2. Install the Required Packages
 The following dependencies are required:
@@ -32,14 +32,14 @@ The following dependencies are required:
 SQLAlchemy (for database ORM)
 Click (for creating CLI commands)
 
-***pip install -r requirements.txt***
+`***pip install -r requirements.txt***`
 
 Usage
 You can use the CLI tool to manage your veterinary clinic's data. Below are the available commands:
 
 General Command Structure
 Copy code
-python -m veterinary.cli [COMMAND]
+`python -m veterinary.cli [COMMAND]`
 
 Commands
 1. Add a Client
