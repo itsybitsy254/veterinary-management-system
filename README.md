@@ -1,6 +1,6 @@
-# veterinary-management-system
+Veterinary Management System
 
-This project is a command-line interface (CLI) app for managing the database of a veterinary clinic. It enables you to add and manage clients, animals, veterinarians, specializations, appointments, and prescriptions using a simple command-based system.
+This project is a command-line interface (CLI) application for managing the database of a veterinary clinic. It enables you to add and manage clients, animals, veterinarians, specializations, appointments, and prescriptions using a simple command-based system.
 
 Features
 
@@ -20,96 +20,70 @@ SQLite database
 
 
 Setup Instructions
-1. Clone the Repository
+Clone the Repository
 
-`***git clone https://github.com/itsybitsy254/veterinary-management-system.git***`
+`git clone https://github.com/itsybitsy254/veterinary-management-system.git`
 
-`**cd veterinary-management-system/**`
+open file directory:
+`cd veterinary-management-system/`
 
-2. Install the Required Packages
+Install the Required Packages
 The following dependencies are required:
 
 SQLAlchemy (for database ORM)
 Click (for creating CLI commands)
 
-`***pip install -r requirements.txt***`
+Copy code
+`pip install -r requirements.txt`
+
 
 Usage
 You can use the CLI tool to manage your veterinary clinic's data. Below are the available commands:
+**To access the main menu and run commands automatically, run:**
 
-General Command Structure
-Copy code
-`python -m veterinary.cli [COMMAND]`
+`python -m veterinary.cli menu`
 
-***```python
-Commands
-```***
-1. Add a Client
+***Or you can input data manually via:***
 Add a new client with their name, email, and phone number.
 Copy code
-
-***python -m veterinary.cli add-client***
-
-
-
-2. Add a Veterinarian
+`python -m veterinary.cli add-client`
 Add a new veterinarian and assign specializations (optional).
 Copy code
-***python -m veterinary.cli add-veterinarian***
-
-3. Add a Specialization
+`python -m veterinary.cli add-veterinarian`
 Add a new veterinary specialization (e.g., Surgery, Dentistry).
 Copy code
-***python -m veterinary.cli add-specialization***
-
-4. Add an Animal
+`python -m veterinary.cli add-specialization`
 Add a new animal along with its owner (client), species, breed, and age.
 Copy code
-***python -m veterinary.cli add-animal***
-
-5. Add an Appointment
+`python -m veterinary.cli add-animal`
 Schedule a new appointment for a client’s animal with a veterinarian.
 Copy code
-***python -m veterinary.cli add-appointment***
-
-6. Add a Prescription
+`python -m veterinary.cli add-appointment`
 Add a prescription for an animal with the medication name and dosage.
 Copy code
-***python -m veterinary.cli add-prescription***
-
-7. List Clients
+`python -m veterinary.cli add-prescription`
 Display all clients in the database.
 Copy code
-***python -m veterinary.cli list-clients***
-
-8. List Veterinarians
+`python -m veterinary.cli list-clients`
 Display all veterinarians in the database.
 Copy code
-***python -m veterinary.cli list-veterinarians***
-
-9. List Specializations
+`python -m veterinary.cli list-veterinarians`
 Display all veterinary specializations.
 Copy code
-***python -m veterinary.cli list-specializations***
-
-10. List Animals
+`python -m veterinary.cli list-specializations`
 Display all animals with their owners, species, breed, and age.
 Copy code
-***python -m veterinary.cli list-animals***
-
-11. List Appointments
+`python -m veterinary.cli list-animals`
 Display all appointments with information on the client, animal, and veterinarian.
 Copy code
-***python -m veterinary.cli list-appointments***
-
-12. List Prescriptions
+`python -m veterinary.cli list-appointments`
 Display all prescriptions with associated animal details.
 Copy code
-***python -m veterinary.cli list-prescriptions***
+`python -m veterinary.cli list-prescriptions`
 
 
 Database Structure
-The veterinary.db SQLite database contains the following tables:
+
 
 clients: Stores client details (name, email, phone number).
 
