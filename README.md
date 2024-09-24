@@ -14,7 +14,7 @@ Prescriptions are assigned to animals for easy reference.
 
 Requirements
 
-Python 3.x
+Python 3.^
 
 SQLite database
 
@@ -42,44 +42,6 @@ You can use the CLI tool to manage your veterinary clinic's data. Below are the 
 **To access the main menu and run commands automatically, run:**
 
 `python -m veterinary.cli menu`
-
-***Or you can input data manually via:***
-Add a new client with their name, email, and phone number.
-Copy code
-`python -m veterinary.cli add-client`
-Add a new veterinarian and assign specializations (optional).
-Copy code
-`python -m veterinary.cli add-veterinarian`
-Add a new veterinary specialization (e.g., Surgery, Dentistry).
-Copy code
-`python -m veterinary.cli add-specialization`
-Add a new animal along with its owner (client), species, breed, and age.
-Copy code
-`python -m veterinary.cli add-animal`
-Schedule a new appointment for a client’s animal with a veterinarian.
-Copy code
-`python -m veterinary.cli add-appointment`
-Add a prescription for an animal with the medication name and dosage.
-Copy code
-`python -m veterinary.cli add-prescription`
-Display all clients in the database.
-Copy code
-`python -m veterinary.cli list-clients`
-Display all veterinarians in the database.
-Copy code
-`python -m veterinary.cli list-veterinarians`
-Display all veterinary specializations.
-Copy code
-`python -m veterinary.cli list-specializations`
-Display all animals with their owners, species, breed, and age.
-Copy code
-`python -m veterinary.cli list-animals`
-Display all appointments with information on the client, animal, and veterinarian.
-Copy code
-`python -m veterinary.cli list-appointments`
-Display all prescriptions with associated animal details.
-Copy code
-`python -m veterinary.cli list-prescriptions`
 
 
 Database Structure
